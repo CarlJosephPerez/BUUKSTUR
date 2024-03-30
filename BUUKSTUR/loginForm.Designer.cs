@@ -38,39 +38,42 @@
             // 
             // tbxUsername
             // 
-            tbxUsername.Font = new Font("Tw Cen MT Condensed", 14.25F, FontStyle.Bold);
-            tbxUsername.Location = new Point(355, 173);
+            tbxUsername.Font = new Font("Arial Rounded MT Bold", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            tbxUsername.Location = new Point(345, 189);
             tbxUsername.Name = "tbxUsername";
             tbxUsername.PlaceholderText = "USERNAME";
-            tbxUsername.Size = new Size(220, 28);
+            tbxUsername.Size = new Size(220, 29);
             tbxUsername.TabIndex = 0;
+            tbxUsername.TextAlign = HorizontalAlignment.Center;
             // 
             // tbxPassword
             // 
-            tbxPassword.Font = new Font("Tw Cen MT Condensed", 14.25F, FontStyle.Bold);
-            tbxPassword.Location = new Point(355, 220);
+            tbxPassword.Font = new Font("Arial Rounded MT Bold", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            tbxPassword.Location = new Point(345, 237);
             tbxPassword.Name = "tbxPassword";
             tbxPassword.PlaceholderText = "PASSWORD";
-            tbxPassword.Size = new Size(220, 28);
+            tbxPassword.Size = new Size(220, 29);
             tbxPassword.TabIndex = 1;
+            tbxPassword.TextAlign = HorizontalAlignment.Center;
             tbxPassword.UseSystemPasswordChar = true;
             // 
             // btnLogin
             // 
-            btnLogin.Font = new Font("Tw Cen MT Condensed Extra Bold", 12F, FontStyle.Bold);
+            btnLogin.BackColor = Color.Transparent;
+            btnLogin.Font = new Font("Arial Rounded MT Bold", 11F, FontStyle.Bold, GraphicsUnit.Point);
             btnLogin.ForeColor = SystemColors.ActiveCaption;
             btnLogin.Location = new Point(426, 274);
             btnLogin.Name = "btnLogin";
             btnLogin.Size = new Size(75, 29);
             btnLogin.TabIndex = 2;
             btnLogin.Text = "LOGIN";
-            btnLogin.UseVisualStyleBackColor = true;
+            btnLogin.UseVisualStyleBackColor = false;
             btnLogin.Click += btnLogin_Click;
             // 
             // btnRegister
             // 
             btnRegister.BackColor = Color.Transparent;
-            btnRegister.Font = new Font("Tw Cen MT Condensed Extra Bold", 12F, FontStyle.Bold);
+            btnRegister.Font = new Font("Arial Rounded MT Bold", 11F, FontStyle.Bold, GraphicsUnit.Point);
             btnRegister.ForeColor = Color.FromArgb(255, 192, 128);
             btnRegister.Location = new Point(413, 309);
             btnRegister.Name = "btnRegister";
@@ -83,18 +86,16 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.BackColor = Color.Bisque;
-            label1.BorderStyle = BorderStyle.FixedSingle;
+            label1.BackColor = Color.Transparent;
             label1.FlatStyle = FlatStyle.Popup;
-            label1.Font = new Font("Tw Cen MT Condensed Extra Bold", 40F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.ForeColor = Color.DarkOrange;
-            label1.Location = new Point(183, 60);
+            label1.Font = new Font("Lucida Calligraphy", 39.75F, FontStyle.Regular, GraphicsUnit.Point);
+            label1.ForeColor = Color.Gold;
+            label1.Location = new Point(29, 70);
             label1.Margin = new Padding(0);
             label1.Name = "label1";
-            label1.Size = new Size(545, 65);
+            label1.Size = new Size(823, 68);
             label1.TabIndex = 4;
             label1.Text = "WELCOME TO BUUKSTUR";
-            label1.Click += label1_Click;
             // 
             // BUUKSTUR
             // 
@@ -102,13 +103,15 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             ClientSize = new Size(894, 511);
+            Controls.Add(tbxUsername);
+            Controls.Add(tbxPassword);
             Controls.Add(label1);
             Controls.Add(btnRegister);
             Controls.Add(btnLogin);
-            Controls.Add(tbxPassword);
-            Controls.Add(tbxUsername);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
             Name = "BUUKSTUR";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "BUUKSTUR";
             ResumeLayout(false);
             PerformLayout();
