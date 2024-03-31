@@ -30,6 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(storeForm));
             dgvBooks = new DataGridView();
+            btnLoad = new Button();
+            btnLogout = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvBooks).BeginInit();
             SuspendLayout();
             // 
@@ -37,11 +39,31 @@
             // 
             dgvBooks.BackgroundColor = Color.FromArgb(255, 192, 128);
             dgvBooks.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvBooks.Location = new Point(277, 33);
+            dgvBooks.Location = new Point(130, 35);
             dgvBooks.Name = "dgvBooks";
             dgvBooks.RowTemplate.Height = 25;
-            dgvBooks.Size = new Size(349, 316);
+            dgvBooks.Size = new Size(679, 316);
             dgvBooks.TabIndex = 0;
+            // 
+            // btnLoad
+            // 
+            btnLoad.Location = new Point(130, 371);
+            btnLoad.Name = "btnLoad";
+            btnLoad.Size = new Size(75, 23);
+            btnLoad.TabIndex = 1;
+            btnLoad.Text = "Load";
+            btnLoad.UseVisualStyleBackColor = true;
+            btnLoad.Click += btnLoad_Click;
+            // 
+            // btnLogout
+            // 
+            btnLogout.Location = new Point(211, 371);
+            btnLogout.Name = "btnLogout";
+            btnLogout.Size = new Size(75, 23);
+            btnLogout.TabIndex = 2;
+            btnLogout.Text = "Logout";
+            btnLogout.UseVisualStyleBackColor = true;
+            btnLogout.Click += btnLogout_Click;
             // 
             // storeForm
             // 
@@ -49,6 +71,8 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             ClientSize = new Size(894, 511);
+            Controls.Add(btnLogout);
+            Controls.Add(btnLoad);
             Controls.Add(dgvBooks);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "storeForm";
@@ -61,5 +85,7 @@
         #endregion
 
         private DataGridView dgvBooks;
+        private Button btnLoad;
+        private Button btnLogout;
     }
 }

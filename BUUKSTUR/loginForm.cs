@@ -10,6 +10,12 @@ namespace BUUKSTUR
 
             this.AcceptButton = btnLogin;
         }
+        public void ResetForm()
+        {
+            
+            tbxUsername.Clear();
+            tbxPassword.Clear();
+        }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
@@ -31,12 +37,9 @@ namespace BUUKSTUR
                         int userCount = (int)command.ExecuteScalar();
                         if (userCount > 0)
                         {
-                            MessageBox.Show("Login successful.");
-
+                            this.Hide();
                             storeForm storeForm = new storeForm();
                             storeForm.Show();
-
-                            this.Close();
                         }
                         else
                         {
@@ -49,6 +52,7 @@ namespace BUUKSTUR
                     }
                 }
             }
+            
         }
 
         private void btnRegister_Click(object sender, EventArgs e)
