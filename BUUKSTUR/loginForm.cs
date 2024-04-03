@@ -22,7 +22,7 @@ namespace BUUKSTUR
             string username = tbxUsername.Text;
             string password = tbxPassword.Text; 
 
-            string connectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=""C:\Users\Administrator\Documents\OOP2\buuksturr.mdb"";";
+            string connectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=""C:\Users\Administrator\Documents\OOP2\buuksturr.mdb"";";
             using (OleDbConnection connection = new OleDbConnection(connectionString))
             {
                 string sql = "SELECT COUNT(1) FROM Accounts WHERE Username = ? AND Password = ?";
@@ -52,7 +52,34 @@ namespace BUUKSTUR
                     }
                 }
             }
-            
+            Program.CurrentUserId = RetrieveUserId(tbxUsername.Text);
+        }
+        private int RetrieveUserId(string username)
+        {
+            int userId = 0; // Default to 0 or an appropriate 'not found' value
+            string connectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=""C:\Users\Administrator\Documents\OOP2\buuksturr.mdb"";";
+            using (OleDbConnection connection = new OleDbConnection(connectionString))
+            {
+                string sql = "SELECT UserID FROM Accounts WHERE Username = ?";
+                using (OleDbCommand command = new OleDbCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("?", username);
+                    try
+                    {
+                        connection.Open();
+                        object result = command.ExecuteScalar();
+                        if (result != null)
+                        {
+                            userId = Convert.ToInt32(result);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("An error occurred: " + ex.Message);
+                    }
+                }
+            }
+            return userId;
         }
 
         private void btnRegister_Click(object sender, EventArgs e)

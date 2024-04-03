@@ -44,7 +44,7 @@ namespace BUUKSTUR
         }
         private void LoadBooks()
         {
-            string connectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=\"C:\\Users\\Administrator\\Documents\\OOP2\\buuksturr.mdb\"";
+            string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"C:\\Users\\Administrator\\Documents\\OOP2\\buuksturr.mdb\"";
             string query = "SELECT * FROM Inventory";
             using (OleDbConnection connection = new OleDbConnection(connectionString))
             using (OleDbDataAdapter adapter = new OleDbDataAdapter(query, connection))
@@ -95,9 +95,13 @@ namespace BUUKSTUR
                 var row = dgvBooks.Rows[e.RowIndex];
                 int bookId = Convert.ToInt32(row.Cells["BOOKID"].Value);
                 string title = row.Cells["Title"].Value.ToString();
-                decimal price = Convert.ToDecimal(row.Cells["Price"].Value);
+                decimal price = Convert.ToDecimal(row.Cells["Price($)"].Value);
                 AddToCart(bookId, title, price);
             }
+        }
+        private int GetCurrentUserId()
+        {
+            return Program.CurrentUserId; // This will now return the ID of the currently logged-in user
         }
 
 
@@ -110,10 +114,20 @@ namespace BUUKSTUR
                                                      MessageBoxButtons.YesNo);
                 if (confirmResult == DialogResult.Yes)
                 {
-                    cartItems.Clear();
-                    UpdateCartUI();
+                    try
+                    {
+                        // Assuming you have a method to get the current logged-in user's ID
+                        int userId = GetCurrentUserId();
+                        CompleteOrder(cartItems.ToList(), userId);
 
-                    MessageBox.Show("Checkout successful.");
+                        cartItems.Clear();
+                        UpdateCartUI();
+                        MessageBox.Show("Checkout successful. Your order has been placed.");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("An error occurred while processing your order: " + ex.Message);
+                    }
                 }
             }
             else
@@ -121,8 +135,60 @@ namespace BUUKSTUR
                 MessageBox.Show("Your cart is empty.");
             }
         }
-        
+        private void CompleteOrder(List<CartItem> cartItems, int userId)
+        {
+            string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"C:\\Users\\Administrator\\Documents\\OOP2\\buuksturr.mdb\"";
+            using (OleDbConnection connection = new OleDbConnection(connectionString))
+            {
+                connection.Open();
+                OleDbCommand command = connection.CreateCommand();
+                OleDbTransaction transaction = connection.BeginTransaction();   
 
+                command.Connection = connection;
+                command.Transaction = transaction;
+
+                try
+                {
+                    // Insert into Orders table
+                    command.CommandText = "INSERT INTO Orders (USERID, OrderDate, TotalPrice) VALUES (?, ?, ?)";
+                    command.Parameters.Add(new OleDbParameter("@UserID", OleDbType.Integer)).Value = userId;
+                    command.Parameters.Add(new OleDbParameter("@OrderDate", OleDbType.Date)).Value = DateTime.Now;
+                    command.Parameters.Add(new OleDbParameter("@TotalPrice", OleDbType.Currency)).Value = cartItems.Sum(item => item.Price * item.Quantity);
+                    command.ExecuteNonQuery();
+
+                    // Get the last inserted order's ID
+                    command.CommandText = "SELECT @@IDENTITY";
+                    int orderId = (int)command.ExecuteScalar();
+
+                    // Insert each cart item into OrderDetails table
+                    foreach (var item in cartItems)
+                    {
+                        command.CommandText = "INSERT INTO OrderDetails (OrderID, BOOKID, Quantity, PriceAtPurchase) VALUES (?, ?, ?, ?)";
+                        command.Parameters.Clear();
+                        command.Parameters.Add(new OleDbParameter("@OrderID", OleDbType.Integer)).Value = orderId;
+                        command.Parameters.Add(new OleDbParameter("@BookID", OleDbType.Integer)).Value = item.BookID;
+                        command.Parameters.Add(new OleDbParameter("@Quantity", OleDbType.Integer)).Value = item.Quantity;
+                        command.Parameters.Add(new OleDbParameter("@PriceAtPurchase", OleDbType.Currency)).Value = item.Price;
+                        command.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    try
+                    {
+                        transaction.Rollback();
+                    }
+                    catch (Exception rollbackEx)
+                    {
+                        MessageBox.Show("A severe error occurred during transaction rollback. Please contact support.");
+                    }
+                    MessageBox.Show("An error occurred while processing your order: " + ex.Message);
+                    throw; // Rethrow the original exception to be caught by the outer try-catch
+                }
+            }
+        }
         private void btnLogout_Click(object sender, EventArgs e)
         {
             loggingOut = true;
