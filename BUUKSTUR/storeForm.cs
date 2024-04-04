@@ -45,7 +45,7 @@ namespace BUUKSTUR
         }
         private void LoadBooks()
         {
-            string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"C:\\Users\\L23Y08W19\\source\\repos\\CarlJosephPerez\\BUUKSTUR\\buuksturr.mdb\";";
+            string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"C:\\Users\\Administrator\\source\\repos\\BUUKSTUR\\BUUKSTUR\\buuksturr.mdb\";";
             string query = "SELECT * FROM Inventory";
             using (OleDbConnection connection = new OleDbConnection(connectionString))
             using (OleDbDataAdapter adapter = new OleDbDataAdapter(query, connection))
@@ -55,12 +55,10 @@ namespace BUUKSTUR
                 dgvBooks.DataSource = books;
             }
         }
-
         private void storeForm_Load(object sender, EventArgs e)
         {
             LoadBooks();
         }
-
         public class CartItem
         {
             public int BookID { get; set; }
@@ -68,8 +66,6 @@ namespace BUUKSTUR
             public decimal Price { get; set; }
             public int Quantity { get; set; }
         }
-
-
         private void AddToCart(int bookId, string title, decimal price)
         {
             var item = cartItems.FirstOrDefault(i => i.BookID == bookId);
@@ -82,7 +78,6 @@ namespace BUUKSTUR
                 cartItems.Add(new CartItem { BookID = bookId, Title = title, Price = price, Quantity = 1 });
             }
         }
-
         private void UpdateCartUI()
         {
             //dgvCart.DataSource = typeof(List<>);
@@ -104,8 +99,6 @@ namespace BUUKSTUR
         {
             return Program.CurrentUserId;
         }
-
-
         private void btnCheckout_Click(object sender, EventArgs e)
         {
             if (cartItems.Count > 0)
@@ -117,7 +110,6 @@ namespace BUUKSTUR
                 {
                     try
                     {
-                        // Assuming you have a method to get the current logged-in user's ID
                         int userId = GetCurrentUserId();
                         CompleteOrder(cartItems.ToList(), userId);
 
@@ -139,7 +131,7 @@ namespace BUUKSTUR
         private void CompleteOrder(List<CartItem> cartItems, int userId)
         {
             string username = GetUsernameByUserId(userId);
-            string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"C:\\Users\\L23Y08W19\\source\\repos\\CarlJosephPerez\\BUUKSTUR\\buuksturr.mdb\";";
+            string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"C:\\Users\\Administrator\\source\\repos\\BUUKSTUR\\BUUKSTUR\\buuksturr.mdb\";";
             using (OleDbConnection connection = new OleDbConnection(connectionString))
             {
                 connection.Open();
@@ -151,20 +143,26 @@ namespace BUUKSTUR
 
                 try
                 {
-                    // Insert into Orders table
                     command.CommandText = "INSERT INTO Orders (USERID, [Username], OrderDate, TotalPrice ) VALUES (?, ?, ?, ?)";
                     command.Parameters.Add(new OleDbParameter("@UserID", OleDbType.Integer)).Value = userId;
                     command.Parameters.Add(new OleDbParameter("@Username", OleDbType.VarChar)).Value = username;
                     command.Parameters.Add(new OleDbParameter("@OrderDate", OleDbType.Date)).Value = DateTime.Now;
                     command.Parameters.Add(new OleDbParameter("@TotalPrice", OleDbType.Currency)).Value = cartItems.Sum(item => item.Price * item.Quantity);
-                    
+
                     command.ExecuteNonQuery();
-                    //transaction.Commit();
-                    // Get the last inserted order's ID
+                    
                     command.CommandText = "SELECT @@IDENTITY";
                     int orderId = (int)command.ExecuteScalar();
+                    foreach (var item in cartItems)
+                    {
+                        command.CommandText = "UPDATE Inventory SET Stock = Stock - ? WHERE BookID = ?";
+                        command.Parameters.Clear();
+                        command.Parameters.Add(new OleDbParameter("@Quantity", OleDbType.Integer)).Value = item.Quantity;
+                        command.Parameters.Add(new OleDbParameter("@BookID", OleDbType.Integer)).Value = item.BookID;
 
-                    // Insert each cart item into OrderDetails table
+                        // Execute the update command
+                        command.ExecuteNonQuery();
+                    }
                     foreach (var item in cartItems)
                     {
                         command.CommandText = "INSERT INTO OrderDetails (OrderID, BOOKID, Quantity, PriceAtPurchase) VALUES (?, ?, ?, ?)";
@@ -189,15 +187,14 @@ namespace BUUKSTUR
                         MessageBox.Show("A severe error occurred during transaction rollback. Please contact support.");
                     }
                     MessageBox.Show("An error occurred while processing your order: " + ex.Message);
-                    throw; // Rethrow the original exception to be caught by the outer try-catch
+                    throw; 
                 }
             }
         }
         private string GetUsernameByUserId(int userId)
         {
             string username = "";
-            // Replace with your actual connection string.
-            string connectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=""C:\Users\L23Y08W19\source\repos\CarlJosephPerez\BUUKSTUR\buuksturr.mdb"";";
+            string connectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=""C:\Users\Administrator\source\repos\BUUKSTUR\BUUKSTUR\buuksturr.mdb"";";
 
             using (OleDbConnection connection = new OleDbConnection(connectionString))
             {
@@ -224,7 +221,6 @@ namespace BUUKSTUR
             }
             return username;
         }
-
         private void btnLogout_Click(object sender, EventArgs e)
         {
             loggingOut = true;
@@ -254,7 +250,22 @@ namespace BUUKSTUR
                 Application.Exit();
             }
         }
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            if (dgvCart.CurrentRow != null)
+            {
+                int selectedRowIndex = dgvCart.CurrentCell.RowIndex;
+                CartItem selectedItem = cartItems[selectedRowIndex];
 
+                cartItems.Remove(selectedItem);
 
+                dgvCart.DataSource = null;
+                dgvCart.DataSource = cartItems;
+            }
+            else
+            {
+                MessageBox.Show("Please select an item to remove.");
+            }
+        }
     }
 }

@@ -22,7 +22,7 @@ namespace BUUKSTUR
             string username = tbxUsername.Text;
             string password = tbxPassword.Text; 
 
-            string connectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=""C:\Users\Administrator\Documents\OOP2\buuksturr.mdb"";";
+            string connectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=""C:\Users\Administrator\source\repos\BUUKSTUR\BUUKSTUR\buuksturr.mdb"";";
             using (OleDbConnection connection = new OleDbConnection(connectionString))
             {
                 string sql = "SELECT COUNT(1) FROM Accounts WHERE Username = ? AND Password = ?";
@@ -57,7 +57,7 @@ namespace BUUKSTUR
         private int RetrieveUserId(string username)
         {
             int userId = 0; // Default to 0 or an appropriate 'not found' value
-            string connectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=""C:\Users\Administrator\Documents\OOP2\buuksturr.mdb"";";
+            string connectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=""C:\Users\Administrator\source\repos\BUUKSTUR\BUUKSTUR\buuksturr.mdb"";";
             using (OleDbConnection connection = new OleDbConnection(connectionString))
             {
                 string sql = "SELECT UserID FROM Accounts WHERE Username = ?";

@@ -33,6 +33,7 @@
             btnLogout = new Button();
             dgvCart = new DataGridView();
             btnCheckout = new Button();
+            btnRemove = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvBooks).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvCart).BeginInit();
             SuspendLayout();
@@ -44,7 +45,7 @@
             dgvBooks.Location = new Point(61, 35);
             dgvBooks.Name = "dgvBooks";
             dgvBooks.RowTemplate.Height = 25;
-            dgvBooks.Size = new Size(585, 330);
+            dgvBooks.Size = new Size(740, 573);
             dgvBooks.TabIndex = 0;
             // 
             // btnLogout
@@ -53,7 +54,7 @@
             btnLogout.BackgroundImageLayout = ImageLayout.Stretch;
             btnLogout.FlatStyle = FlatStyle.Flat;
             btnLogout.ForeColor = Color.White;
-            btnLogout.Location = new Point(848, 501);
+            btnLogout.Location = new Point(1166, 624);
             btnLogout.Name = "btnLogout";
             btnLogout.Size = new Size(75, 33);
             btnLogout.TabIndex = 2;
@@ -65,16 +66,16 @@
             // 
             dgvCart.BackgroundColor = Color.FromArgb(255, 192, 128);
             dgvCart.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvCart.Location = new Point(699, 35);
+            dgvCart.Location = new Point(845, 35);
             dgvCart.Name = "dgvCart";
             dgvCart.RowTemplate.Height = 25;
-            dgvCart.Size = new Size(206, 330);
+            dgvCart.Size = new Size(396, 330);
             dgvCart.TabIndex = 3;
             // 
             // btnCheckout
             // 
             btnCheckout.FlatStyle = FlatStyle.Flat;
-            btnCheckout.Location = new Point(761, 383);
+            btnCheckout.Location = new Point(955, 391);
             btnCheckout.Name = "btnCheckout";
             btnCheckout.Size = new Size(85, 33);
             btnCheckout.TabIndex = 4;
@@ -82,12 +83,27 @@
             btnCheckout.UseVisualStyleBackColor = true;
             btnCheckout.Click += btnCheckout_Click;
             // 
+            // btnRemove
+            // 
+            btnRemove.FlatStyle = FlatStyle.Flat;
+            btnRemove.Location = new Point(1046, 391);
+            btnRemove.Name = "btnRemove";
+            btnRemove.Size = new Size(85, 33);
+            btnRemove.TabIndex = 5;
+            btnRemove.Text = "Remove";
+            btnRemove.UseVisualStyleBackColor = true;
+            btnRemove.Click += btnRemove_Click;
+            // 
             // storeForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
-            ClientSize = new Size(935, 546);
+            BackgroundImageLayout = ImageLayout.Stretch;
+            ClientSize = new Size(1278, 768);
+            Controls.Add(btnRemove);
             Controls.Add(btnCheckout);
             Controls.Add(dgvCart);
             Controls.Add(btnLogout);
@@ -97,6 +113,7 @@
             Name = "storeForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "BUUKSTUR";
+            WindowState = FormWindowState.Maximized;
             ((System.ComponentModel.ISupportInitialize)dgvBooks).EndInit();
             ((System.ComponentModel.ISupportInitialize)dgvCart).EndInit();
             ResumeLayout(false);
@@ -108,5 +125,6 @@
         private Button btnLogout;
         private DataGridView dgvCart;
         private Button btnCheckout;
+        private Button btnRemove;
     }
 }

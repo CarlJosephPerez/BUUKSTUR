@@ -24,7 +24,7 @@ namespace BUUKSTUR
         {
             
 
-            string connectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=""C:\Users\Administrator\Documents\OOP2\buuksturr.mdb"";";
+            string connectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=""C:\Users\Administrator\source\repos\BUUKSTUR\BUUKSTUR\buuksturr.mdb"";";
 
             using (OleDbConnection connection = new OleDbConnection(connectionString))
             {
