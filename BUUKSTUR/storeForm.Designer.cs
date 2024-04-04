@@ -80,6 +80,7 @@
             btnCheckout.TabIndex = 4;
             btnCheckout.Text = "Checkout";
             btnCheckout.UseVisualStyleBackColor = true;
+            btnCheckout.Click += btnCheckout_Click;
             // 
             // storeForm
             // 
@@ -92,6 +93,7 @@
             Controls.Add(btnLogout);
             Controls.Add(dgvBooks);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
             Name = "storeForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "BUUKSTUR";

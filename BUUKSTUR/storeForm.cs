@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace BUUKSTUR
 {
@@ -28,7 +29,7 @@ namespace BUUKSTUR
             dgvCart.AutoGenerateColumns = true;
             dgvCart.DataSource = cartItems;
             this.dgvBooks.CellContentClick += new DataGridViewCellEventHandler(this.dgvBooks_CellContentClick);
-            this.btnCheckout.Click += new EventHandler(this.btnCheckout_Click);
+
 
         }
         private void SetupBooksDataGridView()
@@ -44,7 +45,7 @@ namespace BUUKSTUR
         }
         private void LoadBooks()
         {
-            string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"C:\\Users\\Administrator\\Documents\\OOP2\\buuksturr.mdb\"";
+            string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"C:\\Users\\L23Y08W19\\source\\repos\\CarlJosephPerez\\BUUKSTUR\\buuksturr.mdb\";";
             string query = "SELECT * FROM Inventory";
             using (OleDbConnection connection = new OleDbConnection(connectionString))
             using (OleDbDataAdapter adapter = new OleDbDataAdapter(query, connection))
@@ -57,7 +58,7 @@ namespace BUUKSTUR
 
         private void storeForm_Load(object sender, EventArgs e)
         {
-            LoadBooks(); // Call a method to load the books
+            LoadBooks();
         }
 
         public class CartItem
@@ -67,7 +68,7 @@ namespace BUUKSTUR
             public decimal Price { get; set; }
             public int Quantity { get; set; }
         }
-        
+
 
         private void AddToCart(int bookId, string title, decimal price)
         {
@@ -101,7 +102,7 @@ namespace BUUKSTUR
         }
         private int GetCurrentUserId()
         {
-            return Program.CurrentUserId; // This will now return the ID of the currently logged-in user
+            return Program.CurrentUserId;
         }
 
 
@@ -137,12 +138,13 @@ namespace BUUKSTUR
         }
         private void CompleteOrder(List<CartItem> cartItems, int userId)
         {
-            string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"C:\\Users\\Administrator\\Documents\\OOP2\\buuksturr.mdb\"";
+            string username = GetUsernameByUserId(userId);
+            string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"C:\\Users\\L23Y08W19\\source\\repos\\CarlJosephPerez\\BUUKSTUR\\buuksturr.mdb\";";
             using (OleDbConnection connection = new OleDbConnection(connectionString))
             {
                 connection.Open();
                 OleDbCommand command = connection.CreateCommand();
-                OleDbTransaction transaction = connection.BeginTransaction();   
+                OleDbTransaction transaction = connection.BeginTransaction();
 
                 command.Connection = connection;
                 command.Transaction = transaction;
@@ -150,12 +152,14 @@ namespace BUUKSTUR
                 try
                 {
                     // Insert into Orders table
-                    command.CommandText = "INSERT INTO Orders (USERID, OrderDate, TotalPrice) VALUES (?, ?, ?)";
+                    command.CommandText = "INSERT INTO Orders (USERID, [Username], OrderDate, TotalPrice ) VALUES (?, ?, ?, ?)";
                     command.Parameters.Add(new OleDbParameter("@UserID", OleDbType.Integer)).Value = userId;
+                    command.Parameters.Add(new OleDbParameter("@Username", OleDbType.VarChar)).Value = username;
                     command.Parameters.Add(new OleDbParameter("@OrderDate", OleDbType.Date)).Value = DateTime.Now;
                     command.Parameters.Add(new OleDbParameter("@TotalPrice", OleDbType.Currency)).Value = cartItems.Sum(item => item.Price * item.Quantity);
+                    
                     command.ExecuteNonQuery();
-
+                    //transaction.Commit();
                     // Get the last inserted order's ID
                     command.CommandText = "SELECT @@IDENTITY";
                     int orderId = (int)command.ExecuteScalar();
@@ -189,6 +193,38 @@ namespace BUUKSTUR
                 }
             }
         }
+        private string GetUsernameByUserId(int userId)
+        {
+            string username = "";
+            // Replace with your actual connection string.
+            string connectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=""C:\Users\L23Y08W19\source\repos\CarlJosephPerez\BUUKSTUR\buuksturr.mdb"";";
+
+            using (OleDbConnection connection = new OleDbConnection(connectionString))
+            {
+                string query = "SELECT Username FROM Accounts WHERE UserID = ?";
+
+                using (OleDbCommand command = new OleDbCommand(query, connection))
+                {
+                    command.Parameters.Add(new OleDbParameter("@UserID", OleDbType.Integer)).Value = userId;
+
+                    try
+                    {
+                        connection.Open();
+                        object result = command.ExecuteScalar();
+                        if (result != null)
+                        {
+                            username = result.ToString();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("An error occurred: " + ex.Message);
+                    }
+                }
+            }
+            return username;
+        }
+
         private void btnLogout_Click(object sender, EventArgs e)
         {
             loggingOut = true;
@@ -218,7 +254,6 @@ namespace BUUKSTUR
                 Application.Exit();
             }
         }
-        
 
 
     }
