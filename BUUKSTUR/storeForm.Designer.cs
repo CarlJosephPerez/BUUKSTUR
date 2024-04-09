@@ -42,10 +42,10 @@
             // 
             dgvBooks.BackgroundColor = Color.FromArgb(255, 192, 128);
             dgvBooks.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvBooks.Location = new Point(61, 35);
+            dgvBooks.Location = new Point(12, 12);
             dgvBooks.Name = "dgvBooks";
             dgvBooks.RowTemplate.Height = 25;
-            dgvBooks.Size = new Size(740, 573);
+            dgvBooks.Size = new Size(832, 567);
             dgvBooks.TabIndex = 0;
             // 
             // btnLogout
@@ -53,10 +53,11 @@
             btnLogout.BackColor = Color.IndianRed;
             btnLogout.BackgroundImageLayout = ImageLayout.Stretch;
             btnLogout.FlatStyle = FlatStyle.Flat;
+            btnLogout.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             btnLogout.ForeColor = Color.White;
-            btnLogout.Location = new Point(1166, 624);
+            btnLogout.Location = new Point(1175, 681);
             btnLogout.Name = "btnLogout";
-            btnLogout.Size = new Size(75, 33);
+            btnLogout.Size = new Size(144, 56);
             btnLogout.TabIndex = 2;
             btnLogout.Text = "Logout";
             btnLogout.UseVisualStyleBackColor = false;
@@ -66,18 +67,18 @@
             // 
             dgvCart.BackgroundColor = Color.FromArgb(255, 192, 128);
             dgvCart.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvCart.Location = new Point(845, 35);
+            dgvCart.Location = new Point(897, 12);
             dgvCart.Name = "dgvCart";
             dgvCart.RowTemplate.Height = 25;
-            dgvCart.Size = new Size(396, 330);
+            dgvCart.Size = new Size(433, 454);
             dgvCart.TabIndex = 3;
             // 
             // btnCheckout
             // 
             btnCheckout.FlatStyle = FlatStyle.Flat;
-            btnCheckout.Location = new Point(955, 391);
+            btnCheckout.Location = new Point(1006, 482);
             btnCheckout.Name = "btnCheckout";
-            btnCheckout.Size = new Size(85, 33);
+            btnCheckout.Size = new Size(103, 48);
             btnCheckout.TabIndex = 4;
             btnCheckout.Text = "Checkout";
             btnCheckout.UseVisualStyleBackColor = true;
@@ -86,9 +87,9 @@
             // btnRemove
             // 
             btnRemove.FlatStyle = FlatStyle.Flat;
-            btnRemove.Location = new Point(1046, 391);
+            btnRemove.Location = new Point(1115, 482);
             btnRemove.Name = "btnRemove";
-            btnRemove.Size = new Size(85, 33);
+            btnRemove.Size = new Size(103, 48);
             btnRemove.TabIndex = 5;
             btnRemove.Text = "Remove";
             btnRemove.UseVisualStyleBackColor = true;
@@ -102,7 +103,7 @@
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
-            ClientSize = new Size(1278, 768);
+            ClientSize = new Size(1370, 749);
             Controls.Add(btnRemove);
             Controls.Add(btnCheckout);
             Controls.Add(dgvCart);

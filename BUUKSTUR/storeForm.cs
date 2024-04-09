@@ -29,7 +29,9 @@ namespace BUUKSTUR
             dgvCart.AutoGenerateColumns = true;
             dgvCart.DataSource = cartItems;
             this.dgvBooks.CellContentClick += new DataGridViewCellEventHandler(this.dgvBooks_CellContentClick);
-
+            //this.WindowState = FormWindowState.Maximized;
+            //this.TopMost = true;
+            //this.Bounds = Screen.PrimaryScreen.Bounds;
 
         }
         private void SetupBooksDataGridView()
@@ -111,11 +113,12 @@ namespace BUUKSTUR
                     try
                     {
                         int userId = GetCurrentUserId();
-                        CompleteOrder(cartItems.ToList(), userId);
+                        string receipt = CompleteOrder(cartItems.ToList(), userId);
+                        
 
                         cartItems.Clear();
                         UpdateCartUI();
-                        MessageBox.Show("Checkout successful. Your order has been placed.");
+                        MessageBox.Show(receipt, "Receipt", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
@@ -128,7 +131,7 @@ namespace BUUKSTUR
                 MessageBox.Show("Your cart is empty.");
             }
         }
-        private void CompleteOrder(List<CartItem> cartItems, int userId)
+        private string CompleteOrder(List<CartItem> cartItems, int userId)
         {
             string username = GetUsernameByUserId(userId);
             string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"C:\\Users\\Administrator\\source\\repos\\BUUKSTUR\\BUUKSTUR\\buuksturr.mdb\";";
@@ -190,6 +193,24 @@ namespace BUUKSTUR
                     throw; 
                 }
             }
+            StringBuilder receiptBuilder = new StringBuilder();
+            receiptBuilder.AppendLine("Receipt for Your Order:");
+            receiptBuilder.AppendLine("--------------------------");
+
+            foreach (var item in cartItems)
+            {
+                receiptBuilder.AppendLine($"Qty: {item.Quantity}");
+                receiptBuilder.AppendLine($"Item: {item.Title}");
+                receiptBuilder.AppendLine($"Price: {item.Price:C}");
+                receiptBuilder.AppendLine("--------------------------");
+            }
+
+            decimal total = cartItems.Sum(item => item.Price * item.Quantity);
+            receiptBuilder.AppendLine($"Total: {total:C}");
+            receiptBuilder.AppendLine("Thank you for your purchase!");
+            dgvBooks.Refresh();
+            // Return the receipt string
+            return receiptBuilder.ToString();
         }
         private string GetUsernameByUserId(int userId)
         {
