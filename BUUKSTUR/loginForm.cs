@@ -35,11 +35,24 @@ namespace BUUKSTUR
                     {
                         connection.Open();
                         int userCount = (int)command.ExecuteScalar();
-                        if (userCount > 0)
+                        if (userCount > 0) 
                         {
-                            this.Hide();
-                            storeForm storeForm = new storeForm();
-                            storeForm.Show();
+                            Program.CurrentUserId = RetrieveUserId(tbxUsername.Text);
+
+                            if (Program.CurrentUserId == 1)
+                            {
+                                this.Hide();
+                                adminForm adminForm = new adminForm();
+                                adminForm.Closed += (s, args) => this.Close();
+                                adminForm.Show();
+                            }
+                            else
+                            {
+                                this.Hide();
+                                storeForm storeForm = new storeForm();
+                                storeForm.Closed += (s, args) => this.Close();
+                                storeForm.Show();
+                            }
                         }
                         else
                         {

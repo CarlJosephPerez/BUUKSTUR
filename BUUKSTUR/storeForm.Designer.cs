@@ -67,10 +67,10 @@
             // 
             dgvCart.BackgroundColor = Color.FromArgb(255, 192, 128);
             dgvCart.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvCart.Location = new Point(897, 12);
+            dgvCart.Location = new Point(931, 12);
             dgvCart.Name = "dgvCart";
             dgvCart.RowTemplate.Height = 25;
-            dgvCart.Size = new Size(433, 454);
+            dgvCart.Size = new Size(359, 454);
             dgvCart.TabIndex = 3;
             // 
             // btnCheckout

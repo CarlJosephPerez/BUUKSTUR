@@ -21,6 +21,7 @@ namespace BUUKSTUR
         DataSet? ds;
         int indexRow;
         private BindingList<CartItem> cartItems = new BindingList<CartItem>();
+
         public storeForm()
         {
             InitializeComponent();
@@ -61,12 +62,55 @@ namespace BUUKSTUR
         {
             LoadBooks();
         }
-        public class CartItem
+        public class CartItem : INotifyPropertyChanged
         {
-            public int BookID { get; set; }
-            public string Title { get; set; }
-            public decimal Price { get; set; }
-            public int Quantity { get; set; }
+            private string title;
+            private int quantity;
+            private decimal price;
+            public int BookID;
+            public string Title
+            {
+                get => title;
+                set
+                {
+                    if (title != value)
+                    {
+                        title = value;
+                        OnPropertyChanged(nameof(Title));
+                    }
+                }
+            }
+
+            public int Quantity
+            {
+                get => quantity;
+                set
+                {
+                    if (quantity != value)
+                    {
+                        quantity = value;
+                        OnPropertyChanged(nameof(Quantity));
+                    }
+                }
+            }
+
+            public decimal Price
+            {
+                get => price;
+                set
+                {
+                    if (price != value)
+                    {
+                        price = value;
+                        OnPropertyChanged(nameof(Price));
+                    }
+                }
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            protected virtual void OnPropertyChanged(string propertyName) =>
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         private void AddToCart(int bookId, string title, decimal price)
         {
@@ -276,12 +320,7 @@ namespace BUUKSTUR
             if (dgvCart.CurrentRow != null)
             {
                 int selectedRowIndex = dgvCart.CurrentCell.RowIndex;
-                CartItem selectedItem = cartItems[selectedRowIndex];
-
-                cartItems.Remove(selectedItem);
-
-                dgvCart.DataSource = null;
-                dgvCart.DataSource = cartItems;
+                cartItems.RemoveAt(selectedRowIndex);
             }
             else
             {
