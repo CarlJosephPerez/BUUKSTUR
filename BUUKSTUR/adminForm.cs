@@ -17,6 +17,7 @@ namespace BUUKSTUR
         public adminForm()
         {
             InitializeComponent();
+            LoadBooks();
         }
         private void GenerateAndDisplaySalesReport()
         {
@@ -72,7 +73,47 @@ namespace BUUKSTUR
             Program.LoginForm.ResetForm();
             Program.LoginForm.Show();
         }
+        private void LoadBooks()
+        {
+            string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"C:\\Users\\Administrator\\source\\repos\\BUUKSTUR\\BUUKSTUR\\buuksturr.mdb\";";
+            string query = "SELECT * FROM Inventory";
+            using (OleDbConnection connection = new OleDbConnection(connectionString))
+            using (OleDbDataAdapter adapter = new OleDbDataAdapter(query, connection))
+            {
+                DataTable books = new DataTable();
+                adapter.Fill(books);
+                dgvBooks.DataSource = books;
+            }
+        }
+        private void btnAddBooks_Click(object sender, EventArgs e)
+        {
+            addBooksForm addBooksForm = new addBooksForm();
 
-        
+            addBooksForm.ShowDialog();
+
+            LoadBooks();
+        }
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (loggingOut)
+            {
+                e.Cancel = true;
+                this.Hide();
+                loggingOut = false;
+                Program.LoginForm.Show();
+            }
+            else
+            {
+                base.OnFormClosing(e);
+                Application.Exit();
+            }
+        }
+        private void adminForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!loggingOut)
+            {
+                Application.Exit();
+            }
+        }
     }
 }

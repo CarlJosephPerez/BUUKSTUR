@@ -29,21 +29,23 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(adminForm));
-            dataGridView1 = new DataGridView();
+            dgvBooks = new DataGridView();
             btnGenerateSalesReport = new Button();
-            btnEditInventory = new Button();
+            btnAddBooks = new Button();
             btnLogout = new Button();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvBooks).BeginInit();
             SuspendLayout();
             // 
-            // dataGridView1
+            // dgvBooks
             // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(12, 23);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.RowTemplate.Height = 25;
-            dataGridView1.Size = new Size(951, 714);
-            dataGridView1.TabIndex = 0;
+            dgvBooks.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvBooks.BackgroundColor = Color.FromArgb(255, 192, 128);
+            dgvBooks.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvBooks.Location = new Point(12, 23);
+            dgvBooks.Name = "dgvBooks";
+            dgvBooks.RowTemplate.Height = 25;
+            dgvBooks.Size = new Size(951, 714);
+            dgvBooks.TabIndex = 0;
             // 
             // btnGenerateSalesReport
             // 
@@ -56,15 +58,16 @@
             btnGenerateSalesReport.UseVisualStyleBackColor = true;
             btnGenerateSalesReport.Click += btnGenerateSalesReport_Click;
             // 
-            // btnEditInventory
+            // btnAddBooks
             // 
-            btnEditInventory.FlatStyle = FlatStyle.Flat;
-            btnEditInventory.Location = new Point(1171, 23);
-            btnEditInventory.Name = "btnEditInventory";
-            btnEditInventory.Size = new Size(103, 48);
-            btnEditInventory.TabIndex = 6;
-            btnEditInventory.Text = "Inventory";
-            btnEditInventory.UseVisualStyleBackColor = true;
+            btnAddBooks.FlatStyle = FlatStyle.Flat;
+            btnAddBooks.Location = new Point(1171, 23);
+            btnAddBooks.Name = "btnAddBooks";
+            btnAddBooks.Size = new Size(103, 48);
+            btnAddBooks.TabIndex = 6;
+            btnAddBooks.Text = "Add Books";
+            btnAddBooks.UseVisualStyleBackColor = true;
+            btnAddBooks.Click += btnAddBooks_Click;
             // 
             // btnLogout
             // 
@@ -89,20 +92,20 @@
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(1370, 749);
             Controls.Add(btnLogout);
-            Controls.Add(btnEditInventory);
+            Controls.Add(btnAddBooks);
             Controls.Add(btnGenerateSalesReport);
-            Controls.Add(dataGridView1);
+            Controls.Add(dgvBooks);
             Name = "adminForm";
             Text = "adminForm";
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvBooks).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private DataGridView dataGridView1;
+        private DataGridView dgvBooks;
         private Button btnGenerateSalesReport;
-        private Button btnEditInventory;
+        private Button btnAddBooks;
         private Button btnLogout;
     }
 }
