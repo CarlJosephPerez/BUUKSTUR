@@ -34,12 +34,13 @@
             btnLogin = new Button();
             btnRegister = new Button();
             label1 = new Label();
+            btnShow = new Button();
             SuspendLayout();
             // 
             // tbxUsername
             // 
             tbxUsername.Font = new Font("Arial Rounded MT Bold", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            tbxUsername.Location = new Point(345, 189);
+            tbxUsername.Location = new Point(346, 190);
             tbxUsername.Name = "tbxUsername";
             tbxUsername.PlaceholderText = "USERNAME";
             tbxUsername.Size = new Size(220, 29);
@@ -49,7 +50,7 @@
             // tbxPassword
             // 
             tbxPassword.Font = new Font("Arial Rounded MT Bold", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            tbxPassword.Location = new Point(345, 237);
+            tbxPassword.Location = new Point(345, 239);
             tbxPassword.Name = "tbxPassword";
             tbxPassword.PlaceholderText = "PASSWORD";
             tbxPassword.Size = new Size(220, 29);
@@ -62,7 +63,7 @@
             btnLogin.BackColor = Color.Transparent;
             btnLogin.Font = new Font("Arial Rounded MT Bold", 11F, FontStyle.Bold, GraphicsUnit.Point);
             btnLogin.ForeColor = SystemColors.ActiveCaption;
-            btnLogin.Location = new Point(426, 274);
+            btnLogin.Location = new Point(416, 274);
             btnLogin.Name = "btnLogin";
             btnLogin.Size = new Size(75, 29);
             btnLogin.TabIndex = 2;
@@ -75,7 +76,7 @@
             btnRegister.BackColor = Color.Transparent;
             btnRegister.Font = new Font("Arial Rounded MT Bold", 11F, FontStyle.Bold, GraphicsUnit.Point);
             btnRegister.ForeColor = Color.FromArgb(255, 192, 128);
-            btnRegister.Location = new Point(413, 309);
+            btnRegister.Location = new Point(404, 309);
             btnRegister.Name = "btnRegister";
             btnRegister.Size = new Size(102, 29);
             btnRegister.TabIndex = 3;
@@ -97,12 +98,26 @@
             label1.TabIndex = 4;
             label1.Text = "WELCOME TO BUUKSTUR";
             // 
+            // btnShow
+            // 
+            btnShow.BackColor = Color.Transparent;
+            btnShow.Font = new Font("Arial Rounded MT Bold", 11F, FontStyle.Bold, GraphicsUnit.Point);
+            btnShow.ForeColor = Color.DimGray;
+            btnShow.Location = new Point(571, 238);
+            btnShow.Name = "btnShow";
+            btnShow.Size = new Size(68, 29);
+            btnShow.TabIndex = 5;
+            btnShow.Text = "SHOW";
+            btnShow.UseVisualStyleBackColor = false;
+            btnShow.Click += btnShow_Click;
+            // 
             // BUUKSTUR
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             ClientSize = new Size(894, 511);
+            Controls.Add(btnShow);
             Controls.Add(tbxUsername);
             Controls.Add(tbxPassword);
             Controls.Add(label1);
@@ -124,5 +139,6 @@
         private Button btnLogin;
         private Button btnRegister;
         private Label label1;
+        private Button btnShow;
     }
 }

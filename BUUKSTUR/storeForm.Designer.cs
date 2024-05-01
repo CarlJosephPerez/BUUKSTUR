@@ -34,6 +34,9 @@
             dgvCart = new DataGridView();
             btnCheckout = new Button();
             btnRemove = new Button();
+            btnSearch = new Button();
+            tbxSearch = new TextBox();
+            cbxSearchCriteria = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)dgvBooks).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvCart).BeginInit();
             SuspendLayout();
@@ -43,10 +46,10 @@
             dgvBooks.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvBooks.BackgroundColor = Color.FromArgb(255, 192, 128);
             dgvBooks.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvBooks.Location = new Point(12, 12);
+            dgvBooks.Location = new Point(39, 121);
             dgvBooks.Name = "dgvBooks";
             dgvBooks.RowTemplate.Height = 25;
-            dgvBooks.Size = new Size(832, 567);
+            dgvBooks.Size = new Size(832, 465);
             dgvBooks.TabIndex = 0;
             // 
             // btnLogout
@@ -77,6 +80,7 @@
             // btnCheckout
             // 
             btnCheckout.FlatStyle = FlatStyle.Flat;
+            btnCheckout.Font = new Font("Arial Rounded MT Bold", 9F, FontStyle.Regular, GraphicsUnit.Point);
             btnCheckout.Location = new Point(1006, 482);
             btnCheckout.Name = "btnCheckout";
             btnCheckout.Size = new Size(103, 48);
@@ -88,6 +92,7 @@
             // btnRemove
             // 
             btnRemove.FlatStyle = FlatStyle.Flat;
+            btnRemove.Font = new Font("Arial Rounded MT Bold", 9F, FontStyle.Regular, GraphicsUnit.Point);
             btnRemove.Location = new Point(1115, 482);
             btnRemove.Name = "btnRemove";
             btnRemove.Size = new Size(103, 48);
@@ -95,6 +100,36 @@
             btnRemove.Text = "Remove";
             btnRemove.UseVisualStyleBackColor = true;
             btnRemove.Click += btnRemove_Click;
+            // 
+            // btnSearch
+            // 
+            btnSearch.Font = new Font("Arial Rounded MT Bold", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            btnSearch.Location = new Point(437, 51);
+            btnSearch.Name = "btnSearch";
+            btnSearch.Size = new Size(109, 36);
+            btnSearch.TabIndex = 6;
+            btnSearch.Text = "SEARCH";
+            btnSearch.UseVisualStyleBackColor = true;
+            btnSearch.Click += btnSearch_Click;
+            // 
+            // tbxSearch
+            // 
+            tbxSearch.Font = new Font("Arial Rounded MT Bold", 14F, FontStyle.Regular, GraphicsUnit.Point);
+            tbxSearch.Location = new Point(155, 53);
+            tbxSearch.Name = "tbxSearch";
+            tbxSearch.PlaceholderText = "SEARCH";
+            tbxSearch.Size = new Size(276, 29);
+            tbxSearch.TabIndex = 7;
+            // 
+            // cbxSearchCriteria
+            // 
+            cbxSearchCriteria.FormattingEnabled = true;
+            cbxSearchCriteria.Items.AddRange(new object[] { "Title", "Author", "Genre(s)" });
+            cbxSearchCriteria.Location = new Point(552, 59);
+            cbxSearchCriteria.Name = "cbxSearchCriteria";
+            cbxSearchCriteria.Size = new Size(121, 23);
+            cbxSearchCriteria.TabIndex = 8;
+            cbxSearchCriteria.Text = "Title";
             // 
             // storeForm
             // 
@@ -105,6 +140,9 @@
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(1370, 749);
+            Controls.Add(cbxSearchCriteria);
+            Controls.Add(tbxSearch);
+            Controls.Add(btnSearch);
             Controls.Add(btnRemove);
             Controls.Add(btnCheckout);
             Controls.Add(dgvCart);
@@ -119,6 +157,7 @@
             ((System.ComponentModel.ISupportInitialize)dgvBooks).EndInit();
             ((System.ComponentModel.ISupportInitialize)dgvCart).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -128,5 +167,8 @@
         private DataGridView dgvCart;
         private Button btnCheckout;
         private Button btnRemove;
+        private Button btnSearch;
+        private TextBox tbxSearch;
+        private ComboBox cbxSearchCriteria;
     }
 }

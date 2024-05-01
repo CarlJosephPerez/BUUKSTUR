@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.OleDb;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.IO;
 
 namespace BUUKSTUR
 {
@@ -158,7 +162,7 @@ namespace BUUKSTUR
                     {
                         int userId = GetCurrentUserId();
                         string receipt = CompleteOrder(cartItems.ToList(), userId);
-                        
+
 
                         cartItems.Clear();
                         UpdateCartUI();
@@ -197,7 +201,7 @@ namespace BUUKSTUR
                     command.Parameters.Add(new OleDbParameter("@TotalPrice", OleDbType.Currency)).Value = cartItems.Sum(item => item.Price * item.Quantity);
 
                     command.ExecuteNonQuery();
-                    
+
                     command.CommandText = "SELECT @@IDENTITY";
                     int orderId = (int)command.ExecuteScalar();
                     foreach (var item in cartItems)
@@ -234,7 +238,7 @@ namespace BUUKSTUR
                         MessageBox.Show("A severe error occurred during transaction rollback. Please contact support.");
                     }
                     MessageBox.Show("An error occurred while processing your order: " + ex.Message);
-                    throw; 
+                    throw;
                 }
             }
             StringBuilder receiptBuilder = new StringBuilder();
@@ -253,8 +257,36 @@ namespace BUUKSTUR
             receiptBuilder.AppendLine($"Total: {total:C}");
             receiptBuilder.AppendLine("Thank you for your purchase!");
             dgvBooks.Refresh();
-            // Return the receipt string
+
+            GeneratePdfReceipt(cartItems, userId);
+
             return receiptBuilder.ToString();
+        }
+        private void GeneratePdfReceipt(List<CartItem> cartItems, int userId)
+        {
+            string customPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MyAppFiles");
+            if (!Directory.Exists(customPath))
+                Directory.CreateDirectory(customPath);
+            string pdfPath = Path.Combine(customPath, $"Receipt_{DateTime.Now:yyyyMMddHHmmss}.pdf");
+            Document document = new Document();
+            PdfWriter.GetInstance(document, new FileStream(pdfPath, FileMode.Create));
+            document.Open();
+
+            document.Add(new Paragraph("Receipt for Your Order"));
+            document.Add(new Paragraph("--------------------------"));
+
+            foreach (var item in cartItems)
+            {
+                document.Add(new Paragraph($"Qty: {item.Quantity} Item: {item.Title} Price: {item.Price:C}"));
+                document.Add(new Paragraph("--------------------------"));
+            }
+
+            decimal total = cartItems.Sum(item => item.Price * item.Quantity);
+            document.Add(new Paragraph($"Total: {total:C}"));
+            document.Add(new Paragraph("Thank you for your purchase!"));
+
+            document.Close();
+
         }
         private string GetUsernameByUserId(int userId)
         {
@@ -325,6 +357,28 @@ namespace BUUKSTUR
             else
             {
                 MessageBox.Show("Please select an item to remove.");
+            }
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            string searchQuery = tbxSearch.Text.ToLower();
+            string searchType = cbxSearchCriteria.SelectedItem.ToString();
+            LoadBooks(searchQuery, searchType);
+        }
+        private void LoadBooks(string searchQuery = "", string searchType = "Title")
+        {
+            string connectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=""C:\Users\Administrator\source\repos\BUUKSTUR\BUUKSTUR\buuksturr.mdb"";";
+            string query = $"SELECT * FROM Inventory WHERE [{searchType}] LIKE ?";
+
+            using (OleDbConnection connection = new OleDbConnection(connectionString))
+            {
+                OleDbDataAdapter adapter = new OleDbDataAdapter(query, connection);
+                adapter.SelectCommand.Parameters.AddWithValue("?", "%" + searchQuery + "%");
+
+                DataTable books = new DataTable();
+                adapter.Fill(books);
+                dgvBooks.DataSource = books;
             }
         }
     }

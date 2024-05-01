@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.OleDb;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.IO;
 
 namespace BUUKSTUR
 {
@@ -20,7 +24,7 @@ namespace BUUKSTUR
             LoadBooks();
         }
         private void GenerateAndDisplaySalesReport()
-        {
+        {   
             StringBuilder reportBuilder = new StringBuilder();
             string connectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=""C:\Users\Administrator\source\repos\BUUKSTUR\BUUKSTUR\buuksturr.mdb"";";
 
@@ -58,8 +62,84 @@ namespace BUUKSTUR
                     return;
                 }
             }
-
+            GeneratePdfSalesReport();
             MessageBox.Show(reportBuilder.ToString(), "Sales Report");
+        }
+        private void GeneratePdfSalesReport()
+        {
+            (List<SaleRecord> salesData, decimal totalSales) = GetSalesData();
+            string customPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MyAppFiles");
+            if (!Directory.Exists(customPath))
+                Directory.CreateDirectory(customPath);
+            string pdfPath = Path.Combine(customPath, $"SalesReport_{DateTime.Now:yyyyMMddHHmmss}.pdf");
+            Document document = new Document(PageSize.A4);
+            PdfWriter.GetInstance(document, new FileStream(pdfPath, FileMode.Create));
+            document.Open();
+
+            PdfPTable table = new PdfPTable(3); 
+            table.AddCell("Order ID");
+            table.AddCell("Date");
+            table.AddCell("Total Sale");
+
+            foreach (var sale in salesData)
+            {
+                table.AddCell(sale.OrderId.ToString());
+                table.AddCell(sale.Date.ToShortDateString());
+                table.AddCell(sale.Total.ToString("C"));
+            }
+
+            document.Add(table);
+            Paragraph totalParagraph = new Paragraph($"Total Sales: {totalSales:C}");
+            totalParagraph.Alignment = Element.ALIGN_CENTER;
+            document.Add(totalParagraph);
+
+            document.Close();
+        }
+
+        private (List<SaleRecord>, decimal) GetSalesData()
+        {
+            List<SaleRecord> salesData = new List<SaleRecord>();
+            decimal totalSales = 0;
+            string connectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=""C:\Users\Administrator\source\repos\BUUKSTUR\BUUKSTUR\buuksturr.mdb"";";
+            using (OleDbConnection connection = new OleDbConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"SELECT OrderID, OrderDate, TotalPrice FROM Orders";
+                string totalQuery = @"SELECT SUM(TotalPrice) AS TotalSales FROM Orders";
+
+                using (OleDbCommand command = new OleDbCommand(query, connection))
+                using (OleDbDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        SaleRecord record = new SaleRecord
+                        {
+                            OrderId = reader.GetInt32(reader.GetOrdinal("OrderID")),
+                            Date = reader.GetDateTime(reader.GetOrdinal("OrderDate")),
+                            Total = reader.GetDecimal(reader.GetOrdinal("TotalPrice"))
+                        };
+                        salesData.Add(record);
+                    }
+                }
+
+                using (OleDbCommand totalCommand = new OleDbCommand(totalQuery, connection))
+                using (OleDbDataReader totalReader = totalCommand.ExecuteReader())
+                {
+                    if (totalReader.Read() && !totalReader.IsDBNull(totalReader.GetOrdinal("TotalSales")))
+                    {
+                        totalSales = totalReader.GetDecimal(totalReader.GetOrdinal("TotalSales"));
+                    }
+                }
+            }
+            return (salesData, totalSales);
+        }
+
+
+        public class SaleRecord
+        {
+            public int OrderId { get; set; }
+            public DateTime Date { get; set; }
+            public decimal Total { get; set; }
         }
 
         private void btnGenerateSalesReport_Click(object sender, EventArgs e)

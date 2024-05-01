@@ -7,20 +7,19 @@ namespace BUUKSTUR
         public BUUKSTUR()
         {
             InitializeComponent();
-
             this.AcceptButton = btnLogin;
         }
         public void ResetForm()
         {
-            
+
             tbxUsername.Clear();
             tbxPassword.Clear();
         }
-
+        private bool isPasswordShown = false;
         private void btnLogin_Click(object sender, EventArgs e)
         {
             string username = tbxUsername.Text;
-            string password = tbxPassword.Text; 
+            string password = tbxPassword.Text;
 
             string connectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=""C:\Users\Administrator\source\repos\BUUKSTUR\BUUKSTUR\buuksturr.mdb"";";
             using (OleDbConnection connection = new OleDbConnection(connectionString))
@@ -35,7 +34,7 @@ namespace BUUKSTUR
                     {
                         connection.Open();
                         int userCount = (int)command.ExecuteScalar();
-                        if (userCount > 0) 
+                        if (userCount > 0)
                         {
                             Program.CurrentUserId = RetrieveUserId(tbxUsername.Text);
 
@@ -69,7 +68,7 @@ namespace BUUKSTUR
         }
         private int RetrieveUserId(string username)
         {
-            int userId = 0; // Default to 0 or an appropriate 'not found' value
+            int userId = 0; 
             string connectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=""C:\Users\Administrator\source\repos\BUUKSTUR\BUUKSTUR\buuksturr.mdb"";";
             using (OleDbConnection connection = new OleDbConnection(connectionString))
             {
@@ -101,6 +100,12 @@ namespace BUUKSTUR
             regForm.Show();
         }
 
-        
+        private void btnShow_Click(object sender, EventArgs e)
+        {
+            isPasswordShown = !isPasswordShown;
+            tbxPassword.UseSystemPasswordChar = !isPasswordShown;
+
+            btnShow.Text = isPasswordShown ? "HIDE" : "SHOW";
+        }
     }
 }
